@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Get Code') {
             steps {
-                git url: 'https://github.com/anafernandez16/todo-list-aws.git', branch: 'develop'
+                git url: "https://github.com/anafernandez16/todo-list-aws.git", branch: 'develop'
                 echo "Workspace: ${WORKSPACE}"
                 sh 'whoami'
                 sh 'hostname'
@@ -41,6 +41,7 @@ pipeline {
         
         stage('Promote') {
             steps {
+            withCredentials([gitUsernamePassword(credentialsId: 'github-credentials', gitToolName: 'Default')]) {
             sh '''
              git checkout master
              git merge develop
@@ -48,9 +49,9 @@ pipeline {
              git commit -m "merge to master"
              git push
             '''
-        
+            }
                 }
-}
+        }
     }
         post {
         always {
