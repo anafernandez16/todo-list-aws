@@ -15,8 +15,10 @@ pipeline {
             steps {
                 sh '''
                 python3 -m flake8 --format=pylint --exit-zero src >flake8.out
+                bandit --exit-zero -r . -f custom -o bandit.out -ll --msg-template="{relpath}:{line}: [{test_id}, {severity}] {msg}"  
                 '''
-               recordIssues tools: [flake8(name: 'Flake8', pattern: 'flake8.out')], qualityGates : [[threshold: 8, type: 'TOTAL', unstable: true], [threshold: 10, type: 'TOTAL', unstable: false]]            
+               recordIssues tools: [flake8(name: 'Flake8', pattern: 'flake8.out')], qualityGates : [[threshold: 8, type: 'TOTAL', unstable: true], [threshold: 10, type: 'TOTAL', unstable: false]] 
+               recordIssues tools: [pyLint(name: 'Bandit', pattern: 'bandit.out')], qualityGates: [[threshold: 2, type: 'TOTAL', unstable: true], [threshold: 4, type: 'TOTAL', unstable: false]]
                 }
         }
         
@@ -44,12 +46,12 @@ pipeline {
             withCredentials([gitUsernamePassword(credentialsId: 'github-credentials', gitToolName: 'Default')]) {
             sh '''
              git add .
-             git commit -m "changes develop"
-             git push
+             git commit -m "add changes to develop"
+             git push --set-upstream origin develop
              git checkout master
              git merge develop
              git push
-            '''
+              '''
             }
                 }
         }
