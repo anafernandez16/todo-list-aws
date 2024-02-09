@@ -1,4 +1,4 @@
 #!/bin/bash
 
 export BASE_URL="$1"
-pytest test/integration/todoApiTest.py
+pytest --junitxml=result-rest.xml test/integration/todoApiTest.py
