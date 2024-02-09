@@ -16,6 +16,7 @@ pipeline {
                 sh '''
                 python3 -m flake8 --format=pylint --exit-zero src >flake8.out
                 bandit --exit-zero -r . -f custom -o bandit.out -ll --msg-template="{relpath}:{line}: [{test_id}, {severity}] {msg}"  
+                git status
                 '''
                recordIssues tools: [flake8(name: 'Flake8', pattern: 'flake8.out')], qualityGates : [[threshold: 8, type: 'TOTAL', unstable: true], [threshold: 10, type: 'TOTAL', unstable: false]] 
                recordIssues tools: [pyLint(name: 'Bandit', pattern: 'bandit.out')], qualityGates: [[threshold: 2, type: 'TOTAL', unstable: true], [threshold: 4, type: 'TOTAL', unstable: false]]
@@ -45,7 +46,6 @@ pipeline {
             steps {
             withCredentials([gitUsernamePassword(credentialsId: 'github-credentials', gitToolName: 'Default')]) {
             sh '''
-            touch prueba
              git status
              git add .
              git commit -m "add changes to develop"
