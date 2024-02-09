@@ -24,7 +24,7 @@ pipeline {
             steps {
                 sh '''
                 sam build
-                sam deploy --stack-name todo-aws-jenkins --resolve-s3 --region us-east-1 --no-fail-on-empty-changeset --force-upload
+                sam deploy --stack-name todo-list-staging --resolve-s3 --region us-east-1 --no-fail-on-empty-changeset --force-upload --config-env staging
                 '''
                 }
         }
@@ -32,7 +32,7 @@ pipeline {
         stage('Rest Test') {
             steps {
                 script {
-                    def BASE_URL = sh(script: "aws cloudformation describe-stacks  --stack-name todo-aws-jenkins --query 'Stacks[0].Outputs[?OutputKey==`BaseUrlApi`].OutputValue' --output text", returnStdout: true)
+                    def BASE_URL = sh(script: "aws cloudformation describe-stacks  --stack-name todo-list-staging --query 'Stacks[0].Outputs[?OutputKey==`BaseUrlApi`].OutputValue' --output text", returnStdout: true)
                     sh "bash scripts/baseurl.sh ${BASE_URL}"
                 }
                 junit 'result*.xml'
@@ -44,7 +44,6 @@ pipeline {
             steps {
             withCredentials([gitUsernamePassword(credentialsId: 'github-credentials', gitToolName: 'Default')]) {
             sh '''
-            git status
              git add .
              git commit -m "add changes to develop"
              git push --set-upstream origin develop
