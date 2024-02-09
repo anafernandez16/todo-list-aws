@@ -43,10 +43,11 @@ pipeline {
             steps {
             withCredentials([gitUsernamePassword(credentialsId: 'github-credentials', gitToolName: 'Default')]) {
             sh '''
+             git add .
+             git commit -m "changes develop"
+             git push
              git checkout master
              git merge develop
-             git add .
-             git commit -m "merge to master"
              git push
             '''
             }
