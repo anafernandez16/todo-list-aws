@@ -45,6 +45,7 @@ pipeline {
             steps {
             withCredentials([gitUsernamePassword(credentialsId: 'github-credentials', gitToolName: 'Default')]) {
             sh '''
+             git status
              git add .
              git commit -m "add changes to develop"
              git push --set-upstream origin develop
