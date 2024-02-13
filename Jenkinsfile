@@ -32,8 +32,9 @@ pipeline {
         stage('Rest Test') {
             steps {
                 script {
-                    def BASE_URL = sh(script: "aws cloudformation describe-stacks  --stack-name todo-list-staging --query 'Stacks[0].Outputs[?OutputKey==`BaseUrlApi`].OutputValue' --output text", returnStdout: true)
-                    sh "bash scripts/baseurl.sh ${BASE_URL}"
+                    def BASE_URL = sh(script: "aws cloudformation describe-stacks  --stack-name todo-list-staging --query 'Stacks[0].Outputs[?OutputKey==`BaseUrlApi`].OutputValue' --output text", returnStdout: true).trim()
+                    // sh "bash scripts/baseurl.sh ${BASE_URL}"
+                   sh "BASE_URL=${BASE_URL} pytest --junitxml=result-rest.xml test/integration/todoApiTest.py"
                 }
                 junit 'result*.xml'
 
