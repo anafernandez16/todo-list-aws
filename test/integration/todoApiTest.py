@@ -19,7 +19,7 @@ class TestApi(unittest.TestCase):
         self.assertIsNotNone(BASE_URL, "URL no configurada")
         self.assertTrue(len(BASE_URL) > 8, "URL no configurada")
 
-    def read_test_api_listtodos(self):
+    def test_api_listtodos(self):
         print('---------------------------------------')
         print('Starting - integration test List TODO')
         #Add TODO
@@ -49,7 +49,7 @@ class TestApi(unittest.TestCase):
         self.assertTrue(response.json())
         
         print('End - integration test List TODO')
-    def test_api_addtodo(self):
+    def read_test_api_addtodo(self):
         print('---------------------------------------')
         print('Starting - integration test Add TODO')
         url = BASE_URL+"/todos"
@@ -74,7 +74,7 @@ class TestApi(unittest.TestCase):
             response.status_code, 200, "Error en la petición API a {url}"
         )
         print('End - integration test Add TODO')
-    def read_test_api_gettodo(self):
+    def test_api_gettodo(self):
         print('---------------------------------------')
         print('Starting - integration test Get TODO')
         #Add TODO
@@ -112,7 +112,7 @@ class TestApi(unittest.TestCase):
         )
         print('End - integration test Get TODO')
     
-    def test_api_updatetodo(self):
+    def read_test_api_updatetodo(self):
         print('---------------------------------------')
         print('Starting - integration test Update TODO')
         #Add TODO
