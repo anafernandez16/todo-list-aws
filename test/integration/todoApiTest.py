@@ -49,7 +49,7 @@ class TestApi(unittest.TestCase):
         self.assertTrue(response.json())
         
         print('End - integration test List TODO')
-    def read_test_api_addtodo(self):
+    def test_api_addtodo(self):
         print('---------------------------------------')
         print('Starting - integration test Add TODO')
         url = BASE_URL+"/todos"
@@ -112,7 +112,7 @@ class TestApi(unittest.TestCase):
         )
         print('End - integration test Get TODO')
     
-    def read_test_api_updatetodo(self):
+    def test_api_updatetodo(self):
         print('---------------------------------------')
         print('Starting - integration test Update TODO')
         #Add TODO
