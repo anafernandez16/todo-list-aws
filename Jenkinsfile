@@ -24,7 +24,7 @@ pipeline {
             steps {
                 sh '''
                 sam build
-                sam deploy --stack-name todo-list-staging --resolve-s3 --region us-east-1 --no-fail-on-empty-changeset --force-upload --config-env staging
+                sam deploy --stack-name todo-list-staging --resolve-s3 --region us-east-1 --no-fail-on-empty-changeset --force-upload --config-env staging --parameter-overrides Stage=staging
                 '''
                 }
         }
