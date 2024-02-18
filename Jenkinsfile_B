@@ -1,0 +1,34 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Get Code') {
+            steps {
+                git url: 'https://github.com/anafernandez16/todo-list-aws.git', branch: 'master'
+                echo "Workspace: ${WORKSPACE}"
+            }
+        }
+        
+        stage('Deploy') {
+            steps {
+                sh '''
+                sam build
+                sam deploy --stack-name todo-list-production --resolve-s3 --region us-east-1 --no-fail-on-empty-changeset --force-upload --config-env production --parameter-overrides Stage=production
+                '''
+                
+                }
+        }
+
+        stage('Rest') {
+            steps {
+                script {
+                    def BASE_URL = sh(script: "aws cloudformation describe-stacks  --stack-name todo-list-production --query 'Stacks[0].Outputs[?OutputKey==`BaseUrlApi`].OutputValue' --output text", returnStdout: true).trim()
+                    sh "BASE_URL=${BASE_URL} pytest -k 'not deletetodo and not updatetodo and not addtodo' --junitxml=result-rest.xml test/integration/todoApiTest.py"
+                }
+                junit 'result*.xml'
+
+                }
+        }
+        
+    }
+}
